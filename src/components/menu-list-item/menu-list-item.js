@@ -1,19 +1,25 @@
 import React from 'react';
 import './menu-list-item.scss';
+import { Link } from "react-router-dom";
 
-const MenuListItem = ({menuItem}) => {
-    const {title, price, url, category} = menuItem;
+const MenuListItem = ({menuItem, onAddToCart}) => {
+    const {title, price, url, category, id} = menuItem;
     return (
+      // <Route path='4' component={ProductPage}>
       <li className="menu__item">
-        <div className="menu__title">{title}</div>
-        <img className="menu__img" src={url} alt={title}></img>
+        <Link to={`/${id}`}>
+          <div className="menu__title">{title}</div>
+          <img className="menu__img" src={url} alt={title}></img>
+        </Link>
         <div className="menu__category">
           Category: <span>{category}</span>
         </div>
         <div className="menu__price">
           Price: <span>{price}$</span>
         </div>
-        <button className="menu__btn">Add to cart</button>
+        <button onClick={(e) =>{e.preventDefault(); onAddToCart(id, price)}} className="menu__btn">
+          Add to cart
+        </button>
       </li>
     );
 }

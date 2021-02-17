@@ -2,9 +2,15 @@ import React, { Component } from "react";
 import MenuListItem from "../menu-list-item";
 import { connect } from "react-redux";
 import WithRestoService from "../hoc";
-import { menuLoaded, menuRequsted, errorRecieved } from "../../actions";
+import {
+  menuLoaded,
+  menuRequsted,
+  errorRecieved,
+  addedToCart,
+} from "../../actions";
 import Spinner from "../spinner";
 import Error from "../error";
+// import {Route} from 'react-router-dom';
 
 import "./menu-list.scss";
 
@@ -18,14 +24,22 @@ class MenuList extends Component {
       .catch(() => this.props.errorRecieved());
   }
 
-  renderPage(items) {
-    return items.map((item) => {
-      return <MenuListItem key={item.id} menuItem={item} />;
+  renderPage(items, addedToCart) {
+    return items.map((menuItem) => {
+      return (
+        // <Route path={item.title} component={MenuListItem}>
+        <MenuListItem
+          key={menuItem.id}
+          menuItem={menuItem}
+          onAddToCart={() => addedToCart(menuItem.id, menuItem.price)}
+        />
+        // </Route>
+      );
     });
   }
 
   render() {
-    const { menuItems, loading, error } = this.props;
+    const { menuItems, loading, error, addedToCart } = this.props;
     console.log(this.props);
 
     if (loading) {
@@ -33,7 +47,7 @@ class MenuList extends Component {
     } else if (error) {
       return <Error />;
     }
-    return <ul className="menu__list">{this.renderPage(menuItems)}</ul>;
+    return <ul className="menu__list">{this.renderPage(menuItems, addedToCart)}</ul>;
   }
 }
 
@@ -48,6 +62,7 @@ const mapDispatchToProps = {
   menuLoaded,
   menuRequsted,
   errorRecieved,
+  addedToCart,
 };
 
 export default WithRestoService()(connect(mapStateToProps, mapDispatchToProps)(MenuList));
